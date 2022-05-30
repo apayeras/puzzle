@@ -9,7 +9,8 @@ public class P6Puzzle {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        String userDir = System.getProperty("user.dir");
+        System.out.println("USER DIR :"+ userDir);
     }
 
 }
