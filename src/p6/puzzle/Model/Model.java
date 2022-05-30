@@ -33,4 +33,8 @@ public class Model{
         }
     }
 
+    public Puzzle getPuzzle(){
+        return this.puzzle;
+    }
+
 }

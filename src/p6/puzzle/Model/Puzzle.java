@@ -147,8 +147,9 @@ public class Puzzle {
           cells[pos] = new Cell(subImage, pos);
           pos++;
           accWidth += SUB_WIDTH;
-          accHeight += SUB_HEIGHT;
         }
+        accWidth = 0;
+        accHeight += SUB_HEIGHT;
       }
     } catch (IOException e) {
       e.printStackTrace();
