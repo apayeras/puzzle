@@ -20,6 +20,7 @@ public class Puzzle {
     this.cells = new Cell[dimension*dimension];
     createCells(imageFile);
     initPuzzle();
+    printTable();
     shakePuzzle();
   }
 
@@ -29,7 +30,7 @@ public class Puzzle {
 
     for(int i=0;i<dimension;i++) {
       for(int j=0;j<dimension;j++) {
-        table[i][j] = pos++;
+        table[j][i] = pos++;
       }
     }
 
@@ -45,10 +46,11 @@ public class Puzzle {
       Random rand = new Random();
       // Nº of movements
       int N_MOVES = rand.nextInt(10, 101);
+      System.out.println("N_MOVES : "+N_MOVES);
 
       while(N_MOVES > 0){
         int movIndex = rand.nextInt(0, moves.length);
-        while(moves[movIndex] == lastMove || !isValidMove(moves[movIndex])){
+        while(moves[movIndex].opposite == lastMove || !isValidMove(moves[movIndex])){
           movIndex = rand.nextInt(0, moves.length);
         }
 
@@ -58,6 +60,7 @@ public class Puzzle {
       }
     } catch (Exception e) {
       //Not accessible, we check if valid move before move
+      System.out.println("EXCEPTIOOOOOON");
     }
   }
 
@@ -95,7 +98,7 @@ public class Puzzle {
       }
       //blanc per amunt
       case BOTTOM -> {
-        if(emptyY - 1 >= dimension) return false;
+        if(emptyY - 1 < 0) return false;
       }
       //blanc dreta
       case LEFT -> {
@@ -103,7 +106,7 @@ public class Puzzle {
       }
       //blanc esquerra
       case RIGHT -> {
-        if(emptyX - 1 >= dimension) return false;
+        if(emptyX - 1 < 0) return false;
       }
     }
     return true;
@@ -120,8 +123,15 @@ public class Puzzle {
     int movY = moveValues[1];
 
     int prevId = table[movX + emptyX][movY + emptyY];
+    //replace empty id
     table[emptyX][emptyY] = prevId;
-    table[movX + emptyX][movY + emptyY] = emptyId;
+
+    //update empty pos
+    emptyX += movX;
+    emptyY += movY;
+    table[emptyX][emptyY] = emptyId;
+    System.out.println("MOVE :"+move);
+    printTable();
   }
 
   private void createCells(File imageFile){
@@ -136,12 +146,12 @@ public class Puzzle {
       int accWidth = 0;
       int accHeight = 0;
       int pos = 0;
-      int lastCellId = (dimension * dimension) - 1;
 
       for(int i=0; i<dimension;i++){
         for (int j=0;j<dimension;j++){
-          if(pos == lastCellId){
-            cells[pos] = new Cell(null, -1);
+          if(pos == emptyId){
+            cells[pos] = new Cell(null, emptyId);
+            continue;
           }
           BufferedImage subImage = image.getSubimage(accWidth, accHeight, SUB_WIDTH, SUB_HEIGHT);
           cells[pos] = new Cell(subImage, pos);
@@ -160,7 +170,29 @@ public class Puzzle {
     TOP,
     BOTTOM,
     LEFT,
-    RIGHT
+    RIGHT;
+
+    private Movement opposite;
+
+    static {
+      TOP.opposite = BOTTOM;
+      BOTTOM.opposite = TOP;
+      LEFT.opposite = RIGHT;
+      RIGHT.opposite = LEFT;
+    }
   }
 
+  private void printTable(){
+    for (int i = 0; i < dimension ; i++){
+      for (int j = 0; j < dimension; j++){
+        if(table[j][i] == emptyId){
+          System.out.print("💩 ");
+        }else {
+          System.out.print(table[j][i] + " ");
+        }
+      }
+      System.out.println();
+    }
+    System.out.println();
+  }
 }
