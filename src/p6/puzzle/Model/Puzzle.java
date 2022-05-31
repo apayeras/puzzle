@@ -20,7 +20,6 @@ public class Puzzle {
     this.cells = new Cell[dimension*dimension];
     createCells(imageFile);
     initPuzzle();
-    printTable();
     shakePuzzle();
   }
 
@@ -45,12 +44,12 @@ public class Puzzle {
       Movement lastMove = null;
       Random rand = new Random();
       // Nº of movements
-      int N_MOVES = rand.nextInt(10, 101);
+      int N_MOVES = rand.nextInt(10, 101) * dimension;
       System.out.println("N_MOVES : "+N_MOVES);
 
       while(N_MOVES > 0){
         int movIndex = rand.nextInt(0, moves.length);
-        while(moves[movIndex].opposite == lastMove || !isValidMove(moves[movIndex])){
+        while(moves[movIndex].opposite() == lastMove || !isValidMove(moves[movIndex])){
           movIndex = rand.nextInt(0, moves.length);
         }
 
@@ -112,8 +111,7 @@ public class Puzzle {
     return true;
   }
 
-  public void move(Movement move) throws Exception{
-
+  public int[][] move(Movement move) throws Exception{
     if(!isValidMove(move)){
       throw new Exception("Not valid movement");
     }
@@ -130,8 +128,8 @@ public class Puzzle {
     emptyX += movX;
     emptyY += movY;
     table[emptyX][emptyY] = emptyId;
-    System.out.println("MOVE :"+move);
-    printTable();
+
+    return this.table;
   }
 
   private void createCells(File imageFile){
@@ -166,33 +164,7 @@ public class Puzzle {
     }
   }
 
-  enum Movement{
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT;
-
-    private Movement opposite;
-
-    static {
-      TOP.opposite = BOTTOM;
-      BOTTOM.opposite = TOP;
-      LEFT.opposite = RIGHT;
-      RIGHT.opposite = LEFT;
-    }
-  }
-
-  private void printTable(){
-    for (int i = 0; i < dimension ; i++){
-      for (int j = 0; j < dimension; j++){
-        if(table[j][i] == emptyId){
-          System.out.print("💩 ");
-        }else {
-          System.out.print(table[j][i] + " ");
-        }
-      }
-      System.out.println();
-    }
-    System.out.println();
+  public int[][] getTable(){
+    return this.table;
   }
 }
