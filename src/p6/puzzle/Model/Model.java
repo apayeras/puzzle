@@ -12,15 +12,15 @@ import java.io.FilenameFilter;
 public class Model implements EventListener {
 
     private final P6Puzzle p6;
-    File[] puzzleImages;
-    Puzzle puzzle;
+    public final File[] puzzleImages;
+    private Puzzle puzzle;
 
     public Model(P6Puzzle p6){
         this.p6 = p6;
-        loadPuzzleImages();
+        this.puzzleImages = loadPuzzleImages();
     }
 
-    private void loadPuzzleImages(){
+    private File[] loadPuzzleImages(){
         String userDir = System.getProperty("user.dir");
         File imagesDir = new File(userDir + "/assets");
 
@@ -35,8 +35,9 @@ public class Model implements EventListener {
                     return false;
                 }
             };
-            puzzleImages = imagesDir.listFiles();
+            return imagesDir.listFiles();
         }
+        return new File[0];
     }
 
     public Puzzle getPuzzle(){

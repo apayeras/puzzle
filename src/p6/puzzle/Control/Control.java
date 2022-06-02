@@ -12,13 +12,12 @@ import java.util.ArrayList;
 public class Control implements EventListener {
 
     private P6Puzzle p6;
-    private ArrayList<int[][]> puzzleSteps;
 
     public Control(P6Puzzle p6){
         this.p6 = p6;
     }
 
-    private void setResolved(ArrayList<int[][]> puzzleSteps){
+    public void setResolved(ArrayList<int[][]> puzzleSteps){
         p6.notify(new ViewEvent(puzzleSteps));
     }
 

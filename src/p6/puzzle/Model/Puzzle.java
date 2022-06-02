@@ -4,26 +4,40 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Puzzle {
 
   public final int dimension;
   public final Cell[] cells;
+  public final int[][] solved;
   private int[][] table;
   private int emptyX;
   private int emptyY;
-  private int emptyId;
+  public int emptyId;
+  private Movement lastMove;
+
+  public Puzzle(Puzzle puzzle){
+    this.dimension = puzzle.dimension;
+    this.cells = puzzle.cells;
+    this.emptyId = puzzle.emptyId;
+    this.emptyX = puzzle.emptyX;
+    this.emptyY = puzzle.emptyY;
+    this.solved = cloneMatrix(puzzle.solved);
+    this.table = cloneMatrix(puzzle.table);
+    this.lastMove = puzzle.lastMove;
+  }
 
   public Puzzle(File imageFile, int dimension) {
     this.dimension = dimension;
     this.cells = new Cell[dimension*dimension];
+    this.solved = initPuzzle();
     createCells(imageFile);
-    initPuzzle();
     shakePuzzle();
   }
 
-  private void initPuzzle() {
+  private int[][] initPuzzle() {
     table = new int[dimension][dimension];
     int pos = 0;
 
@@ -34,8 +48,11 @@ public class Puzzle {
     }
 
     emptyId = table[dimension-1][dimension-1];
+
     emptyX = dimension-1;
     emptyY = dimension-1;
+
+    return cloneMatrix(table);
   }
 
   private void shakePuzzle(){
@@ -44,8 +61,7 @@ public class Puzzle {
       Movement lastMove = null;
       Random rand = new Random();
       // Nº of movements
-      int N_MOVES = rand.nextInt(10, 101) * dimension;
-      System.out.println("N_MOVES : "+N_MOVES);
+      int N_MOVES = rand.nextInt(5, 20) /* dimension*/;
 
       while(N_MOVES > 0){
         int movIndex = rand.nextInt(0, moves.length);
@@ -57,6 +73,8 @@ public class Puzzle {
         lastMove = moves[movIndex];
         N_MOVES--;
       }
+      //reset last move on shake
+      this.lastMove = null;
     } catch (Exception e) {
       //Not accessible, we check if valid move before move
       System.out.println("EXCEPTIOOOOOON");
@@ -68,21 +86,21 @@ public class Puzzle {
     int movY = 0;
 
     switch(move){
-      //blanc per avall
-      case TOP -> {
-        movY++;
-      }
       //blanc per amunt
-      case BOTTOM -> {
+      case TOP -> {
         movY--;
       }
-      //blanc dreta
-      case LEFT -> {
-        movX++;
+      //blanc per avall
+      case BOTTOM -> {
+        movY++;
       }
       //blanc esquerra
-      case RIGHT -> {
+      case LEFT -> {
         movX--;
+      }
+      //blanc dreta
+      case RIGHT -> {
+        movX++;
       }
     }
 
@@ -91,21 +109,21 @@ public class Puzzle {
 
   public boolean isValidMove(Movement move){
     switch(move){
-      //blanc per avall
+      //blanc amunt
       case TOP -> {
-        if(emptyY + 1 >= dimension) return false;
-      }
-      //blanc per amunt
-      case BOTTOM -> {
         if(emptyY - 1 < 0) return false;
       }
-      //blanc dreta
-      case LEFT -> {
-        if(emptyX + 1 >= dimension) return false;
+      //blanc abaix
+      case BOTTOM -> {
+        if(emptyY + 1 >= dimension) return false;
       }
       //blanc esquerra
-      case RIGHT -> {
+      case LEFT -> {
         if(emptyX - 1 < 0) return false;
+      }
+      //blanc dreta
+      case RIGHT -> {
+        if(emptyX + 1 >= dimension) return false;
       }
     }
     return true;
@@ -129,7 +147,14 @@ public class Puzzle {
     emptyY += movY;
     table[emptyX][emptyY] = emptyId;
 
-    return this.table;
+    //update last move
+    lastMove = move;
+
+    return cloneMatrix(table);
+  }
+
+  public Movement getLastMove(){
+    return this.lastMove;
   }
 
   private void createCells(File imageFile){
@@ -164,7 +189,11 @@ public class Puzzle {
     }
   }
 
-  public int[][] getTable(){
+  private static int[][] cloneMatrix(int[][] matrix){
+    return Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new);
+  }
+
+  public int[][] getTable() {
     return this.table;
   }
 }
