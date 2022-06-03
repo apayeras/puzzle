@@ -1,6 +1,7 @@
 package p6.puzzle.Model;
 
 import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
 import p6.puzzle.Event;
 import p6.puzzle.EventListener;
 import p6.puzzle.P6Puzzle;
@@ -44,8 +45,8 @@ public class Model implements EventListener {
         return this.puzzle;
     }
 
-    private void initPuzzle(int imageIndex, int dimension){
-        puzzle = new Puzzle(puzzleImages[imageIndex], dimension);
+    private void initPuzzle(Heuristic heuristic, int imageIndex, int dimension){
+        puzzle = new Puzzle(puzzleImages[imageIndex], dimension, heuristic);
         p6.notify(new ControlEvent(puzzle));
         p6.notify(new ViewEvent(puzzle.cells));
     }
@@ -53,6 +54,6 @@ public class Model implements EventListener {
     @Override
     public void notify(Event e) {
         ModelEvent me = (ModelEvent) e;
-        initPuzzle(me.imageIndex, me.dimension);
+        initPuzzle(me.heuristic, me.imageIndex, me.dimension);
     }
 }

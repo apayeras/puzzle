@@ -1,5 +1,7 @@
 package p6.puzzle.Model;
 
+import p6.puzzle.Control.Heuristic;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,34 +9,48 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Puzzle {
+public class Puzzle implements Comparable<Puzzle> {
 
-  public final int dimension;
+  private final int dimension;
   public final Cell[] cells;
-  public final int[][] solved;
+  private final int[][] solved;
   private int[][] table;
   private int emptyX;
   private int emptyY;
-  public int emptyId;
+  private int emptyId;
   private Movement lastMove;
+  public final Puzzle prev;
+  private int cost;
+  private final int level;
+  private final Heuristic heuristic;
 
-  public Puzzle(Puzzle puzzle){
+
+  public Puzzle(Puzzle puzzle, Movement move){
     this.dimension = puzzle.dimension;
     this.cells = puzzle.cells;
     this.emptyId = puzzle.emptyId;
     this.emptyX = puzzle.emptyX;
     this.emptyY = puzzle.emptyY;
-    this.solved = cloneMatrix(puzzle.solved);
+    this.solved = puzzle.solved;
     this.table = cloneMatrix(puzzle.table);
     this.lastMove = puzzle.lastMove;
+    this.prev = puzzle;
+    this.heuristic = puzzle.heuristic;
+    this.level = puzzle.level+ 1;
+    move(move);
+    calcCost();
   }
 
-  public Puzzle(File imageFile, int dimension) {
+  public Puzzle(File imageFile, int dimension, Heuristic heuristic) {
+    this.level = 0;
+    this.prev = null;
     this.dimension = dimension;
     this.cells = new Cell[dimension*dimension];
     this.solved = initPuzzle();
+    this.heuristic = heuristic;
     createCells(imageFile);
     shakePuzzle();
+    calcCost();
   }
 
   private int[][] initPuzzle() {
@@ -56,28 +72,51 @@ public class Puzzle {
   }
 
   private void shakePuzzle(){
-    try {
-      Movement[] moves = Movement.values();
-      Movement lastMove = null;
-      Random rand = new Random();
-      // Nº of movements
-      int N_MOVES = rand.nextInt(5, 20) /* dimension*/;
+    Movement[] moves = Movement.values();
+    Movement lastMove = null;
+    Random rand = new Random();
+    // Nº of movements
+    int N_MOVES = rand.nextInt(10, 50) * dimension/3;
 
-      while(N_MOVES > 0){
-        int movIndex = rand.nextInt(0, moves.length);
-        while(moves[movIndex].opposite() == lastMove || !isValidMove(moves[movIndex])){
-          movIndex = rand.nextInt(0, moves.length);
-        }
-
-        move(moves[movIndex]); //throws Exception
-        lastMove = moves[movIndex];
-        N_MOVES--;
+    while(N_MOVES > 0){
+      int movIndex = rand.nextInt(0, moves.length);
+      while(moves[movIndex].opposite() == lastMove || !isValidMove(moves[movIndex])){
+        movIndex = rand.nextInt(0, moves.length);
       }
-      //reset last move on shake
-      this.lastMove = null;
-    } catch (Exception e) {
-      //Not accessible, we check if valid move before move
-      System.out.println("EXCEPTIOOOOOON");
+
+      move(moves[movIndex]);
+      lastMove = moves[movIndex];
+      N_MOVES--;
+    }
+    //reset last move on shake
+    this.lastMove = null;
+  }
+
+  private int wrongPlacedHeuristic(){
+    int count = 0;
+    int n = this.dimension;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (this.table[i][j] != this.emptyId && this.table[i][j] != this.solved[i][j]) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  private int manhattanHeuristic(){
+    return -1;
+  }
+
+  private void calcCost() {
+    switch(this.heuristic){
+      case WRONG_PLACED -> {
+        cost = wrongPlacedHeuristic();
+      }
+      case MANHATTAN -> {
+        cost = manhattanHeuristic();
+      }
     }
   }
 
@@ -129,11 +168,7 @@ public class Puzzle {
     return true;
   }
 
-  public int[][] move(Movement move) throws Exception{
-    if(!isValidMove(move)){
-      throw new Exception("Not valid movement");
-    }
-
+  public void move(Movement move){
     int[] moveValues = getMoveValues(move);
     int movX = moveValues[0];
     int movY = moveValues[1];
@@ -149,8 +184,6 @@ public class Puzzle {
 
     //update last move
     lastMove = move;
-
-    return cloneMatrix(table);
   }
 
   public Movement getLastMove(){
@@ -195,5 +228,18 @@ public class Puzzle {
 
   public int[][] getTable() {
     return this.table;
+  }
+
+  public int cost(){
+    return this.cost;
+  }
+
+  public int level(){
+    return this.level;
+  }
+
+  @Override
+  public int compareTo(Puzzle o) {
+    return (this.cost + this.level) - (o.cost + o.level);
   }
 }

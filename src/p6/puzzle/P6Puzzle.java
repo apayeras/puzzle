@@ -2,6 +2,7 @@ package p6.puzzle;
 
 import p6.puzzle.Control.Control;
 import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
 import p6.puzzle.Model.Model;
 import p6.puzzle.Model.ModelEvent;
 import p6.puzzle.Model.Puzzle;
@@ -27,7 +28,7 @@ public class P6Puzzle implements EventListener {
         this.control = new Control(this);
         this.view = new View(this);
 
-        model.notify(new ModelEvent(0, 3));
+        model.notify(new ModelEvent(Heuristic.WRONG_PLACED,0, 4));
     }
 
     @Override
