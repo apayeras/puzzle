@@ -36,8 +36,8 @@ public class Control implements EventListener {
 
     }
 
-    private void resolvePuzzle(Puzzle puzzle, Heuristic heuristic){
-        PuzzleResolver resolver = new PuzzleResolver(this, puzzle, heuristic);
+    private void resolvePuzzle(Puzzle puzzle){
+        PuzzleResolver resolver = new PuzzleResolver(this, puzzle);
         (new Thread(resolver)).start();
     }
 
@@ -59,7 +59,7 @@ public class Control implements EventListener {
     @Override
     public void notify(Event e) {
         ControlEvent ce = (ControlEvent) e;
-        resolvePuzzle(ce.puzzle, ce.heuristic);
+        resolvePuzzle(ce.puzzle);
     }
 
 }

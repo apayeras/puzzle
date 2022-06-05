@@ -10,13 +10,11 @@ import java.util.PriorityQueue;
 public class PuzzleResolver implements Runnable {
 
   private final Control control;
-  private final Heuristic heuristic;
   private Puzzle originalPuzzle;
 
-  public PuzzleResolver(Control control, Puzzle puzzle, Heuristic heuristic) {
+  public PuzzleResolver(Control control, Puzzle puzzle) {
     this.control = control;
     this.originalPuzzle = puzzle;
-    this.heuristic = heuristic;
   }
 
   private void resolve(){

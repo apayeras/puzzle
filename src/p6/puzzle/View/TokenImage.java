@@ -15,10 +15,11 @@ public  class TokenImage {
     private BufferedImage sprite;
     private static int dimension;
     private static int img_size;
+    private static final int panelSize = 720;
     
     public TokenImage(){
         dimension = 3;
-        img_size = 720 / dimension;
+        img_size = panelSize / dimension;
         try {
             sprite = ImageIO.read(getClass().getResource("img-scaled.png"));
         } catch (IOException ex) {
@@ -33,7 +34,7 @@ public  class TokenImage {
     
     public static void setDimension(int dim){
         dimension = dim;
-        img_size = 720 / dimension;
+        img_size = panelSize / dimension;
     }
     
     public static int getImgSize(){
@@ -52,7 +53,6 @@ public  class TokenImage {
         if (num_img == dimension*dimension-1) return null;
         
         int [] location = getImageLocation(num_img);
-        //System.out.println("X: "+location[0]+"  Y: "+location[1]+ " Size: "+location[2]);
         return sprite.getSubimage(location[0]*img_size, location[1]*img_size, img_size, img_size)
                 .getScaledInstance(img_size-5, img_size-5, BufferedImage.SCALE_DEFAULT); 
         

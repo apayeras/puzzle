@@ -76,6 +76,7 @@ public class View extends javax.swing.JFrame implements EventListener {
         sizeNum.setText("3");
 
         solve.setText("SOLVE");
+        solve.setEnabled(false);
         solve.setFocusPainted(false);
         solve.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,18 +160,23 @@ public class View extends javax.swing.JFrame implements EventListener {
         // TODO add your handling code here:
         sizeNum.setText(Integer.toString(size.getValue()));
         pi.setDimension(size.getValue());
-        
+        solve.setEnabled(false);
         
     }//GEN-LAST:event_sizeStateChanged
 
     private void shuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shuffleActionPerformed
         // TODO add your handling code here:
-        p6.notify(new ModelEvent(Heuristic.getHeuristic((String) heur.getSelectedItem()),0, size.getValue()));
+        p6.notify(new ModelEvent(Heuristic.getHeuristic((String) heur.getSelectedItem()), size.getValue()));
+        solve.setEnabled(true);
     }//GEN-LAST:event_shuffleActionPerformed
 
     private void solveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveActionPerformed
         // TODO add your handling code here:
         p6.notify(new ControlEvent(p6.getPuzle()));
+        solve.setEnabled(false);
+        shuffle.setEnabled(false);
+        heur.setEnabled(false);
+        size.setEnabled(false);
     }//GEN-LAST:event_solveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -190,7 +196,12 @@ public class View extends javax.swing.JFrame implements EventListener {
     @Override
     public void notify(Event e) {
         ViewEvent ve = (ViewEvent) e;
-        if (ve.type.equals(ViewEvent.ViewEventType.RESOLVED)) pi.setSteps(ve.steps);
+        if (ve.type.equals(ViewEvent.ViewEventType.RESOLVED)) {
+            pi.setSteps(ve.steps);
+            shuffle.setEnabled(true);
+            heur.setEnabled(true);
+            size.setEnabled(true);
+        }
         if (ve.type.equals(ViewEvent.ViewEventType.SET_TABLE)) pi.setTable(ve.table);
         
     }

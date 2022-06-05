@@ -3,15 +3,9 @@ package p6.puzzle.View;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import p6.puzzle.Model.Cell;
 import p6.puzzle.P6Puzzle;
 
 /**
@@ -22,7 +16,6 @@ public class PuzzleImage extends JPanel{
     private P6Puzzle p6;
     private TokenImage ti;
     private BufferedImage bima;
-    private String pieza;
     private int dimension;
     private int img_size;
     private int[][] table;
@@ -44,57 +37,40 @@ public class PuzzleImage extends JPanel{
 
     public void paint(Graphics gr) {
         if (steps == null){
-            if (bima == null) {
-                if (this.getWidth() > 0) {
-                    bima = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D bima_graphics = bima.createGraphics();
-                    bima_graphics.setColor(new Color(217,255,240));
-                    bima_graphics.fillRect(0, 0, bima.getWidth(), bima.getHeight());
-                    if (table == null){
-                        for (int i=0; i< dimension*dimension; i++){
-                            int[] imgLoc = ti.getImageLocation(i);
-                            bima_graphics.drawImage(ti.getSubImatge(i), imgLoc[0]*img_size, imgLoc[1]*img_size, null);
-                        }
-                    } else {
-                        System.out.println("HOLLAAAA");
-                        for (int y=0;y<table.length;y++){
-                            for(int x=0;x<table.length;x++){
-                                bima_graphics.drawImage(ti.getSubImatge(table[x][y]), y*img_size, x*img_size, null);
-                            }
-                            
-                        }
-                    }
-                }
-            }
+            loadImage(table);
             gr.drawImage(bima, 0, 0, this);
-            
         } else {
             for (int[][] step: steps){
-                if (bima == null) {
-                    if (this.getWidth() > 0) {
-                        bima = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D bima_graphics = bima.createGraphics();
-                        bima_graphics.setColor(new Color(217,255,240));
-                        bima_graphics.fillRect(0, 0, bima.getWidth(), bima.getHeight());
-                        for (int y=0;y<step.length;y++){
-                            for(int x=0;x<step.length;x++){
-                                bima_graphics.drawImage(ti.getSubImatge(step[x][y]), y*img_size, x*img_size, null);
-                            }
-                            
-                        }
-                        
-                    }
-
-                }
-                
+                loadImage(step);
                 gr.drawImage(bima, 0, 0, this);
                 bima = null;
                 espera(1000);
             }  
+        }  
+    }
+    
+    
+    private void loadImage(int[][] table){
+        if (bima == null) {
+            if (this.getWidth() > 0) {
+                bima = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D bima_graphics = bima.createGraphics();
+                bima_graphics.setColor(new Color(217,255,240));
+                bima_graphics.fillRect(0, 0, bima.getWidth(), bima.getHeight());
+                if (table == null){
+                    for (int i=0; i< dimension*dimension; i++){
+                        int[] imgLoc = ti.getImageLocation(i);
+                        bima_graphics.drawImage(ti.getSubImatge(i), imgLoc[0]*img_size, imgLoc[1]*img_size, null);
+                    }
+                } else {
+                    for (int y=0;y<table.length;y++){
+                        for(int x=0;x<table.length;x++){
+                            bima_graphics.drawImage(ti.getSubImatge(table[x][y]), y*img_size, x*img_size, null);
+                        }
+                    }
+                }
+            }
         }
-        
-       
-        
     }
     
     public void setDimension(int x){
@@ -116,6 +92,7 @@ public class PuzzleImage extends JPanel{
         this.table = table;
         bima = null;
         this.repaint();
+        this.table = null;
     }
     
     private void espera(long t) {
@@ -125,7 +102,5 @@ public class PuzzleImage extends JPanel{
 
         }
     }
-         
-  
 
 }

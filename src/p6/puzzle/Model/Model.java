@@ -45,8 +45,8 @@ public class Model implements EventListener {
         return this.puzzle;
     }
 
-    private void initPuzzle(Heuristic heuristic, int imageIndex, int dimension){
-        puzzle = new Puzzle(puzzleImages[imageIndex], dimension, heuristic);
+    private void initPuzzle(Heuristic heuristic, int dimension){
+        puzzle = new Puzzle(dimension, heuristic);
         //p6.notify(new ControlEvent(puzzle));
         p6.notify(new ViewEvent(puzzle.getTable()));
     }
@@ -54,6 +54,7 @@ public class Model implements EventListener {
     @Override
     public void notify(Event e) {
         ModelEvent me = (ModelEvent) e;
-        initPuzzle(me.heuristic, me.imageIndex, me.dimension);
+        if (me.met.equals(ModelEvent.ModelEventType.INIT_TABLE)) initPuzzle(me.heuristic, me.dimension);
+        else puzzle.setHeuristic(me.heuristic);
     }
 }

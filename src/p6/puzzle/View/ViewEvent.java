@@ -1,7 +1,6 @@
 package p6.puzzle.View;
 
 import p6.puzzle.Event;
-import p6.puzzle.Model.Cell;
 
 import java.util.ArrayList;
 
