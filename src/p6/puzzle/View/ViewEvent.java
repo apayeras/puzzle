@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class ViewEvent extends Event{
 
     public final ViewEventType type;
-    public final Cell[] cells;
+
+    public final int[][] table;
     public final ArrayList<int[][]> steps;
 
     //SET PUZZLE STEPS
@@ -19,19 +20,20 @@ public class ViewEvent extends Event{
         super(EventType.View);
         this.type = ViewEventType.RESOLVED;
         this.steps = steps;
-        this.cells = null;
+        this.table = null;
     }
 
     //SET CELLS EVENT
-    public ViewEvent(Cell[] cells) {
+    public ViewEvent(int[][] table) {
         super(EventType.View);
-        this.type = ViewEventType.SET_CELLS;
-        this.cells = cells;
+        this.type = ViewEventType.SET_TABLE;
+        this.table = table;
         this.steps = null;
     }
-
+    
+    
     enum ViewEventType{
-        SET_CELLS,
+        SET_TABLE,
         RESOLVED,
     }
 }

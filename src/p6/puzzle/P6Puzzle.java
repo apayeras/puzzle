@@ -28,7 +28,11 @@ public class P6Puzzle implements EventListener {
         this.control = new Control(this);
         this.view = new View(this);
 
-        model.notify(new ModelEvent(Heuristic.WRONG_PLACED,0, 4));
+        
+    }
+    
+    public Puzzle getPuzle(){
+        return model.getPuzzle();
     }
 
     @Override
@@ -38,7 +42,7 @@ public class P6Puzzle implements EventListener {
                 model.notify(e);
             }
             case View -> {
-                //view.notify(e);
+                view.notify(e);
             }
             case Control -> {
                 control.notify(e);

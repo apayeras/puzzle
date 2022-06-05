@@ -1,12 +1,17 @@
 package p6.puzzle.View;
 
+import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
+import p6.puzzle.Event;
+import p6.puzzle.EventListener;
+import p6.puzzle.Model.ModelEvent;
 import p6.puzzle.P6Puzzle;
 
 /**
  *
  * @author Antoni
  */
-public class View extends javax.swing.JFrame {
+public class View extends javax.swing.JFrame implements EventListener {
 
     private final P6Puzzle p6;
     /**
@@ -15,6 +20,8 @@ public class View extends javax.swing.JFrame {
     public View(P6Puzzle p6) {
         this.p6 = p6;
         initComponents();
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -25,25 +32,166 @@ public class View extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        pi = new PuzzleImage(p6);
+        size = new javax.swing.JSlider();
+        sizeNum = new javax.swing.JLabel();
+        solve = new javax.swing.JButton();
+        shuffle = new javax.swing.JButton();
+        heur = new javax.swing.JComboBox<>();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 400));
+        setPreferredSize(new java.awt.Dimension(800, 900));
+
+        jPanel1.setBackground(new java.awt.Color(217, 255, 240));
+
+        jLabel1.setBackground(new java.awt.Color(49, 49, 50));
+        jLabel1.setFont(new java.awt.Font("Aller", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(49, 49, 50));
+        jLabel1.setText("PUZZLE RESOLVER");
+
+        javax.swing.GroupLayout piLayout = new javax.swing.GroupLayout(pi);
+        pi.setLayout(piLayout);
+        piLayout.setHorizontalGroup(
+            piLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 720, Short.MAX_VALUE)
+        );
+        piLayout.setVerticalGroup(
+            piLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 720, Short.MAX_VALUE)
+        );
+
+        size.setMaximum(6);
+        size.setMinimum(2);
+        size.setValue(3);
+        size.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sizeStateChanged(evt);
+            }
+        });
+
+        sizeNum.setFont(new java.awt.Font("Aller", 0, 14)); // NOI18N
+        sizeNum.setText("3");
+
+        solve.setText("SOLVE");
+        solve.setFocusPainted(false);
+        solve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                solveActionPerformed(evt);
+            }
+        });
+
+        shuffle.setFont(new java.awt.Font("Aller", 0, 12)); // NOI18N
+        shuffle.setText("SHUFFLE");
+        shuffle.setFocusPainted(false);
+        shuffle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shuffleActionPerformed(evt);
+            }
+        });
+
+        heur.setModel(new javax.swing.DefaultComboBoxModel<>(Heuristic.toString(Heuristic.values())));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(291, 291, 291)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(pi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(shuffle, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)
+                                .addComponent(heur, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(sizeNum)
+                                .addGap(18, 18, 18)
+                                .addComponent(solve, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(shuffle)
+                        .addComponent(heur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(solve)
+                                .addComponent(sizeNum))
+                            .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(3, 3, 3)))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 732, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
-
-        this.setVisible(true);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void sizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sizeStateChanged
+        // TODO add your handling code here:
+        sizeNum.setText(Integer.toString(size.getValue()));
+        pi.setDimension(size.getValue());
+        
+        
+    }//GEN-LAST:event_sizeStateChanged
+
+    private void shuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shuffleActionPerformed
+        // TODO add your handling code here:
+        p6.notify(new ModelEvent(Heuristic.getHeuristic((String) heur.getSelectedItem()),0, size.getValue()));
+    }//GEN-LAST:event_shuffleActionPerformed
+
+    private void solveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveActionPerformed
+        // TODO add your handling code here:
+        p6.notify(new ControlEvent(p6.getPuzle()));
+    }//GEN-LAST:event_solveActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> heur;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    /*
+    private javax.swing.JPanel pi;
+    */
+    private PuzzleImage pi;
+    private javax.swing.JButton shuffle;
+    private javax.swing.JSlider size;
+    private javax.swing.JLabel sizeNum;
+    private javax.swing.JButton solve;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void notify(Event e) {
+        ViewEvent ve = (ViewEvent) e;
+        if (ve.type.equals(ViewEvent.ViewEventType.RESOLVED)) pi.setSteps(ve.steps);
+        if (ve.type.equals(ViewEvent.ViewEventType.SET_TABLE)) pi.setTable(ve.table);
+        
+    }
 }

@@ -15,6 +15,8 @@ public class ControlEvent extends Event {
     public ControlEvent(Puzzle puzzle){
         super(EventType.Control);
         this.puzzle = puzzle;
-        this.heuristic = Heuristic.WRONG_PLACED;
+        this.heuristic = Heuristic.WRONG_PLACED; // Aquesta heuristica se emplea per algo
     }
+    
+    
 }

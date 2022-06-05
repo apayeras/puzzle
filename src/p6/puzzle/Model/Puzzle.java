@@ -12,7 +12,7 @@ import java.util.Random;
 public class Puzzle implements Comparable<Puzzle> {
 
   private final int dimension;
-  public final Cell[] cells;
+  //public final Cell[] cells;
   private final int[][] solved;
   private int[][] table;
   private int emptyX;
@@ -27,7 +27,7 @@ public class Puzzle implements Comparable<Puzzle> {
 
   public Puzzle(Puzzle puzzle, Movement move){
     this.dimension = puzzle.dimension;
-    this.cells = puzzle.cells;
+    //this.cells = puzzle.cells;
     this.emptyId = puzzle.emptyId;
     this.emptyX = puzzle.emptyX;
     this.emptyY = puzzle.emptyY;
@@ -45,10 +45,10 @@ public class Puzzle implements Comparable<Puzzle> {
     this.level = 0;
     this.prev = null;
     this.dimension = dimension;
-    this.cells = new Cell[dimension*dimension];
+    //this.cells = new Cell[dimension*dimension];
     this.solved = initPuzzle();
     this.heuristic = heuristic;
-    createCells(imageFile);
+    //createCells(imageFile);
     shakePuzzle();
     calcCost();
   }
@@ -190,6 +190,7 @@ public class Puzzle implements Comparable<Puzzle> {
     return this.lastMove;
   }
 
+  /*
   private void createCells(File imageFile){
     try {
       BufferedImage image = ImageIO.read(imageFile);
@@ -221,7 +222,7 @@ public class Puzzle implements Comparable<Puzzle> {
       e.printStackTrace();
     }
   }
-
+*/
   private static int[][] cloneMatrix(int[][] matrix){
     return Arrays.stream(matrix).map(int[]::clone).toArray(int[][]::new);
   }
