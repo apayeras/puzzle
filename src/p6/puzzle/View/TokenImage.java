@@ -15,13 +15,13 @@ public  class TokenImage {
     private BufferedImage sprite;
     private static int dimension;
     private static int img_size;
-    private static final int panelSize = 720;
+    private static final int panelSize = 650;
     
     public TokenImage(){
         dimension = 3;
         img_size = panelSize / dimension;
         try {
-            sprite = ImageIO.read(getClass().getResource("img-scaled.png"));
+            sprite = ImageIO.read(getClass().getResource("perro.jpg"));
         } catch (IOException ex) {
             Logger.getLogger(TokenImage.class.getName()).log(Level.SEVERE, null, ex);
         }
