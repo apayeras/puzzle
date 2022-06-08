@@ -20,7 +20,7 @@ public class Puzzle implements Comparable<Puzzle> {
     private int emptyId;
     private Movement lastMove;
     public final Puzzle prev;
-    private int cost;
+    private double cost;
     private final int level;
     private Heuristic heuristic;
 
@@ -105,6 +105,17 @@ public class Puzzle implements Comparable<Puzzle> {
         return count;
     }
 
+    private int[] getDistance(int id, int x, int y){
+      int n = this.dimension;
+      int solvedPosX = id % n;
+      int solvedPosY = id / n;
+
+      int diffX = Math.abs(solvedPosX - x);
+      int diffY = Math.abs(solvedPosY - y);
+
+      return new int[]{diffX, diffY};
+    }
+
     private int manhattanHeuristic(){
       int count = 0;
       int n = this.dimension;
@@ -112,26 +123,47 @@ public class Puzzle implements Comparable<Puzzle> {
         for (int j = 0; j < n; j++) {
           int id = this.table[i][j];
           if (id != this.emptyId && id != this.solved[i][j]) {
-            int solvedPosX = id % n;
-            int solvedPosY = id / n;
+            int[] distance = getDistance(id, i, j);
+            int distX = distance[0];
+            int distY = distance[1];
 
-            int diffX = Math.abs(solvedPosX - i);
-            int diffY = Math.abs(solvedPosY - j);
-
-            count += diffX + diffY;
+            count += distX + distY;
           }
         }
       }
       return count;
     }
 
+    private int euclideanHeuristic(){
+      int count = 0;
+      int n = this.dimension;
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          int id = this.table[i][j];
+          if (id != this.emptyId && id != this.solved[i][j]) {
+
+            int[] distance = getDistance(id, i, j);
+            int distX = distance[0];
+            int distY = distance[1];
+
+            double euclideanDistance = Math.sqrt((distX * distX) + (distY * distY));
+            count += euclideanDistance;
+          }
+        }
+      }
+      return count;
+  }
+
     private void calcCost() {
       switch(this.heuristic){
         case WRONG_PLACED -> {
-            cost = wrongPlacedHeuristic();
+          cost = wrongPlacedHeuristic();
         }
         case MANHATTAN -> {
-            cost = manhattanHeuristic();
+          cost = manhattanHeuristic();
+        }
+        case EUCLIDEAN -> {
+          cost = euclideanHeuristic();
         }
       }
     }
@@ -214,7 +246,7 @@ public class Puzzle implements Comparable<Puzzle> {
       return this.table;
     }
 
-    public int cost(){
+    public double cost(){
       return this.cost;
     }
 
@@ -224,7 +256,14 @@ public class Puzzle implements Comparable<Puzzle> {
 
     @Override
     public int compareTo(Puzzle o) {
-      return (this.cost + this.level) - (o.cost + o.level);
+      double diff = (this.cost + this.level) - (o.cost + o.level);
+      if(diff < 0){
+        return -1;
+      }
+      if(diff > 0){
+        return 1;
+      }
+      return 0;
     }
 
     public void setHeuristic(Heuristic heu){
