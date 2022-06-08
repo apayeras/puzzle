@@ -1,45 +1,60 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package p6.puzzle.Model;
 
-/**
- *
- * @author soyjo
- */
+import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
+import p6.puzzle.Event;
+import p6.puzzle.EventListener;
+import p6.puzzle.P6Puzzle;
+import p6.puzzle.View.ViewEvent;
 
-public class Model {
+import java.io.File;
+import java.io.FilenameFilter;
 
-    // Nodo al que pertenece
-    public Model nodo;
-    // Matriz de la situacion
-    public int[][] tablero;
+public class Model implements EventListener {
 
-    // Lugar donde encontramos el "hueco"
-    public int x, y;
+    private final P6Puzzle p6;
+    public final File[] puzzleImages;
+    private Puzzle puzzle;
 
-    // Numero de casillas mal colocadas
-    public int coste;
+    public Model(P6Puzzle p6){
+        this.p6 = p6;
+        this.puzzleImages = loadPuzzleImages();
+    }
 
-    // Numero total de movimientos
-    public int movimientos;
+    private File[] loadPuzzleImages(){
+        String userDir = System.getProperty("user.dir");
+        File imagesDir = new File(userDir + "/assets");
 
-    public Model(int[][] tablero, int x, int y, int newX, int newY, int movimientos, Model padre) {
-        this.nodo = padre;
-        this.tablero = new int[tablero.length][];
-        for (int i = 0; i < tablero.length; i++) {
-            this.tablero[i] = tablero[i].clone();
+        if(imagesDir.isDirectory()){
+            FilenameFilter imageFilter = new FilenameFilter(){
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    if(name.endsWith(".jpg")){
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            return imagesDir.listFiles();
         }
+        return new File[0];
+    }
 
-        // Intercambiamos los valores
-        this.tablero[x][y] = this.tablero[x][y] + this.tablero[newX][newY];
-        this.tablero[newX][newY] = this.tablero[x][y] - this.tablero[newX][newY];
-        this.tablero[x][y] = this.tablero[x][y] - this.tablero[newX][newY];
+    public Puzzle getPuzzle(){
+        return this.puzzle;
+    }
 
-        this.coste = Integer.MAX_VALUE;
-        this.movimientos = movimientos;
-        this.x = newX;
-        this.y = newY;
+    private void initPuzzle(Heuristic heuristic, int dimension){
+        puzzle = new Puzzle(dimension, heuristic);
+        //p6.notify(new ControlEvent(puzzle));
+        p6.notify(new ViewEvent(puzzle.getTable()));
+    }
+
+    @Override
+    public void notify(Event e) {
+        ModelEvent me = (ModelEvent) e;
+        if (me.met.equals(ModelEvent.ModelEventType.INIT_TABLE)) initPuzzle(me.heuristic, me.dimension);
+        else puzzle.setHeuristic(me.heuristic);
     }
 }

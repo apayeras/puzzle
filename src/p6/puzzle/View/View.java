@@ -1,16 +1,27 @@
 package p6.puzzle.View;
 
+import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
+import p6.puzzle.Event;
+import p6.puzzle.EventListener;
+import p6.puzzle.Model.ModelEvent;
+import p6.puzzle.P6Puzzle;
+
 /**
  *
  * @author Antoni
  */
-public class View extends javax.swing.JFrame {
+public class View extends javax.swing.JFrame implements EventListener {
 
+    private final P6Puzzle p6;
     /**
      * Creates new form View
      */
-    public View() {
+    public View(P6Puzzle p6) {
+        this.p6 = p6;
         initComponents();
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -22,58 +33,188 @@ public class View extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        pi = new PuzzleImage(p6);
+        size = new javax.swing.JSlider();
+        sizeNum = new javax.swing.JLabel();
+        solve = new javax.swing.JButton();
+        shuffle = new javax.swing.JButton();
+        heur = new javax.swing.JComboBox<>();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 400));
+        setPreferredSize(new java.awt.Dimension(714, 790));
+
+        jPanel1.setBackground(new java.awt.Color(217, 255, 240));
+
+        jLabel1.setBackground(new java.awt.Color(49, 49, 50));
+        jLabel1.setFont(new java.awt.Font("Aller", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(49, 49, 50));
+        jLabel1.setText("PUZZLE RESOLVER");
+
+        pi.setPreferredSize(new java.awt.Dimension(650, 650));
+
+        javax.swing.GroupLayout piLayout = new javax.swing.GroupLayout(pi);
+        pi.setLayout(piLayout);
+        piLayout.setHorizontalGroup(
+            piLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 650, Short.MAX_VALUE)
+        );
+        piLayout.setVerticalGroup(
+            piLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 650, Short.MAX_VALUE)
+        );
+
+        size.setBackground(new java.awt.Color(217, 255, 240));
+        size.setMaximum(6);
+        size.setMinimum(2);
+        size.setValue(3);
+        size.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sizeStateChanged(evt);
+            }
+        });
+
+        sizeNum.setFont(new java.awt.Font("Aller", 0, 14)); // NOI18N
+        sizeNum.setText("3");
+
+        solve.setText("SOLVE");
+        solve.setEnabled(false);
+        solve.setFocusPainted(false);
+        solve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                solveActionPerformed(evt);
+            }
+        });
+
+        shuffle.setFont(new java.awt.Font("Aller", 0, 12)); // NOI18N
+        shuffle.setText("SHUFFLE");
+        shuffle.setFocusPainted(false);
+        shuffle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shuffleActionPerformed(evt);
+            }
+        });
+
+        heur.setModel(new javax.swing.DefaultComboBoxModel<>(Heuristic.toString(Heuristic.values())));
+        heur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                heurActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(shuffle, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(heur, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sizeNum)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(solve, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(279, 279, 279))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(heur, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(shuffle)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(sizeNum)
+                                .addComponent(solve)))))
+                .addContainerGap(13, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 732, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(View.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void sizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sizeStateChanged
+        // TODO add your handling code here:
+        sizeNum.setText(Integer.toString(size.getValue()));
+        pi.setDimension(size.getValue());
+        solve.setEnabled(false);
+        
+    }//GEN-LAST:event_sizeStateChanged
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new View().setVisible(true);
-            }
-        });
-    }
+    private void shuffleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shuffleActionPerformed
+        // TODO add your handling code here:
+        p6.notify(new ModelEvent(Heuristic.getHeuristic((String) heur.getSelectedItem()), size.getValue()));
+        solve.setEnabled(true);
+    }//GEN-LAST:event_shuffleActionPerformed
+
+    private void solveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_solveActionPerformed
+        // TODO add your handling code here:
+        p6.notify(new ControlEvent(p6.getPuzle()));
+        solve.setEnabled(false);
+        shuffle.setEnabled(false);
+        heur.setEnabled(false);
+        size.setEnabled(false);
+    }//GEN-LAST:event_solveActionPerformed
+
+    private void heurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_heurActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> heur;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    /*
+    private javax.swing.JPanel pi;
+    */
+    private PuzzleImage pi;
+    private javax.swing.JButton shuffle;
+    private javax.swing.JSlider size;
+    private javax.swing.JLabel sizeNum;
+    private javax.swing.JButton solve;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void notify(Event e) {
+        ViewEvent ve = (ViewEvent) e;
+        if (ve.type.equals(ViewEvent.ViewEventType.RESOLVED)) {
+            pi.setSteps(ve.steps);
+            shuffle.setEnabled(true);
+            heur.setEnabled(true);
+            size.setEnabled(true);
+        }
+        if (ve.type.equals(ViewEvent.ViewEventType.SET_TABLE)) pi.setTable(ve.table);
+        
+    }
 }

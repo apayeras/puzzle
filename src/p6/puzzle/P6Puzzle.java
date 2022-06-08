@@ -1,31 +1,52 @@
 package p6.puzzle;
 
-
 import p6.puzzle.Control.Control;
+import p6.puzzle.Control.ControlEvent;
+import p6.puzzle.Control.Heuristic;
+import p6.puzzle.Model.Model;
+import p6.puzzle.Model.ModelEvent;
+import p6.puzzle.Model.Puzzle;
+import p6.puzzle.View.View;
 
 /**
  * @author Antoni
  */
-public class P6Puzzle {
+public class P6Puzzle implements EventListener {
+
+    private Model model;
+    private Control control;
+    private View view;
 
 
     public static void main(String[] args) {
-        // Situacion inicial
-        int[][] inicial = {{1, 8, 2}, {0, 4, 3}, {7, 6, 5}};
-        // Situacion objetivo
-        int[][] objetivo = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
-
-        // Coordenadas iniciales de la casilla en blanco
-        int x = 1, y = 0;
-
-        Control puzzle = new Control();
-        // Comprobamos si tiene solución
-        if (puzzle.tieneSolucion(inicial)) {
-            // Resolvemos
-            puzzle.resuelve(inicial, objetivo, x, y);
-        } else {
-            System.out.println("La situación inicial dada es imopsible de resolver");
-        }
+        (new P6Puzzle()).init();
     }
 
+
+    private void init(){
+        this.model = new Model(this);
+        this.control = new Control(this);
+        this.view = new View(this);
+
+        
+    }
+    
+    public Puzzle getPuzle(){
+        return model.getPuzzle();
+    }
+
+    @Override
+    public void notify(Event e) {
+        switch (e.getEventType()){
+            case Model -> {
+                model.notify(e);
+            }
+            case View -> {
+                view.notify(e);
+            }
+            case Control -> {
+                control.notify(e);
+            }
+        }
+    }
 }
