@@ -106,7 +106,23 @@ public class Puzzle implements Comparable<Puzzle> {
     }
 
     private int manhattanHeuristic(){
-      return -1;
+      int count = 0;
+      int n = this.dimension;
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          int id = this.table[i][j];
+          if (id != this.emptyId && id != this.solved[i][j]) {
+            int solvedPosX = id % n;
+            int solvedPosY = id / n;
+
+            int diffX = Math.abs(solvedPosX - i);
+            int diffY = Math.abs(solvedPosY - j);
+
+            count += diffX + diffY;
+          }
+        }
+      }
+      return count;
     }
 
     private void calcCost() {
