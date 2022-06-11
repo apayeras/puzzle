@@ -1,4 +1,4 @@
-package p6.puzzle.Control;
+package p6.puzzle.Model;
 
 public enum Heuristic {
     WRONG_PLACED,

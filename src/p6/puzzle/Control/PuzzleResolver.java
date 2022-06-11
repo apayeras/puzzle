@@ -3,8 +3,6 @@ package p6.puzzle.Control;
 import p6.puzzle.Model.Movement;
 import p6.puzzle.Model.Puzzle;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class PuzzleResolver implements Runnable {
@@ -18,7 +16,7 @@ public class PuzzleResolver implements Runnable {
   }
 
   private void resolve(){
-    PriorityQueue<Puzzle> pq = new PriorityQueue<>(Movement.values().length);
+    PriorityQueue<Puzzle> pq = new PriorityQueue<>();
 
     pq.add(this.originalPuzzle);
 

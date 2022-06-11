@@ -1,6 +1,5 @@
 package p6.puzzle.Model;
 
-import p6.puzzle.Control.Heuristic;
 import p6.puzzle.Event;
 import p6.puzzle.EventListener;
 import p6.puzzle.P6Puzzle;

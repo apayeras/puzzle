@@ -37,21 +37,6 @@ public class Control implements EventListener {
         (new Thread(resolver)).start();
     }
 
-    private String printTable(int[][] table){
-        String s = "";
-        for (int y=0;y<table.length;y++){
-            for(int x=0;x<table.length;x++){
-                if(table[x][y] == table.length*table.length - 1){
-                    s+="💩 ";
-                }else {
-                    s += table[x][y] + " ";
-                }
-            }
-            s+='\n';
-        }
-        return s;
-    }
-
     @Override
     public void notify(Event e) {
         ControlEvent ce = (ControlEvent) e;

@@ -1,6 +1,5 @@
 package p6.puzzle.Model;
 
-import p6.puzzle.Control.Heuristic;
 import p6.puzzle.Event;
 
 public class ModelEvent extends Event {
