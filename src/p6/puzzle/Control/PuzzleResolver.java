@@ -3,8 +3,7 @@ package p6.puzzle.Control;
 import p6.puzzle.Model.Movement;
 import p6.puzzle.Model.Puzzle;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.PriorityQueue;
 
 public class PuzzleResolver implements Runnable {
@@ -19,8 +18,10 @@ public class PuzzleResolver implements Runnable {
 
   private void resolve(){
     PriorityQueue<Puzzle> pq = new PriorityQueue<>(Movement.values().length);
+    HashSet<String> visited = new HashSet<String>();
 
     pq.add(this.originalPuzzle);
+    visited.add(this.originalPuzzle.hash());
 
     while(!pq.isEmpty()){
       Puzzle puzzle = pq.poll();
@@ -31,7 +32,11 @@ public class PuzzleResolver implements Runnable {
       for(Movement mov : Movement.values()){
         if(mov.opposite() != puzzle.getLastMove() && puzzle.isValidMove(mov)){
           Puzzle movedPuzzle = new Puzzle(puzzle, mov);
-          pq.add(movedPuzzle);
+          String hash = movedPuzzle.hash();
+          if(!visited.contains(hash)) {
+            pq.add(movedPuzzle);
+            visited.add(hash);
+          }
         }
       }
     }

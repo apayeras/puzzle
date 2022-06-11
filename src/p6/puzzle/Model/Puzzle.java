@@ -1,6 +1,7 @@
 package p6.puzzle.Model;
 
 import p6.puzzle.Control.Heuristic;
+import p6.puzzle.Control.TableHash;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,7 @@ public class Puzzle implements Comparable<Puzzle> {
     private double cost;
     private final int level;
     private Heuristic heuristic;
+    private String hash;
 
 
     public Puzzle(Puzzle puzzle, Movement move){
@@ -37,7 +39,9 @@ public class Puzzle implements Comparable<Puzzle> {
         this.prev = puzzle;
         this.heuristic = puzzle.heuristic;
         this.level = puzzle.level+ 1;
-        move(move);
+        this.hash = puzzle.hash;
+        int movedCell = move(move);
+        this.hash = TableHash.updateHash(this.hash, emptyId, movedCell);
         calcCost();
     }
 
@@ -51,6 +55,7 @@ public class Puzzle implements Comparable<Puzzle> {
         //createCells(imageFile);
         shakePuzzle();
         calcCost();
+        this.hash = TableHash.getHash(this.table);
     }
 
     private int[][] initPuzzle() {
@@ -216,22 +221,25 @@ public class Puzzle implements Comparable<Puzzle> {
       return true;
     }
 
-    public void move(Movement move){
-        int[] moveValues = getMoveValues(move);
-        int movX = moveValues[0];
-        int movY = moveValues[1];
+    public int move(Movement move){
+      int[] moveValues = getMoveValues(move);
+      int movX = moveValues[0];
+      int movY = moveValues[1];
 
-        int prevId = table[movX + emptyX][movY + emptyY];
-        //replace empty id
-        table[emptyX][emptyY] = prevId;
+      int prevId = table[movX + emptyX][movY + emptyY];
+      //replace empty id
+      table[emptyX][emptyY] = prevId;
 
-        //update empty pos
-        emptyX += movX;
-        emptyY += movY;
-        table[emptyX][emptyY] = emptyId;
+      //update empty pos
+      emptyX += movX;
+      emptyY += movY;
+      table[emptyX][emptyY] = emptyId;
 
-        //update last move
-        lastMove = move;
+      //update last move
+      lastMove = move;
+
+      //return moved cell Id
+      return prevId;
     }
 
     public Movement getLastMove(){
@@ -252,6 +260,10 @@ public class Puzzle implements Comparable<Puzzle> {
 
     public int level(){
       return this.level;
+    }
+
+    public String hash(){
+      return this.hash;
     }
 
     @Override
