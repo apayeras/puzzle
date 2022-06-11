@@ -19,12 +19,14 @@ public class PuzzleImage extends JPanel{
     private int dimension;
     private int img_size;
     private int[][] table;
+    private int speed;
     private ArrayList<int[][]> steps;
 
     
     public PuzzleImage(P6Puzzle p6){
         this.p6 = p6;
         this.dimension = 3;
+        this.speed = 800;
         this.ti = new TokenImage();
         img_size = TokenImage.getImgSize();
     }
@@ -44,7 +46,7 @@ public class PuzzleImage extends JPanel{
                 loadImage(step);
                 gr.drawImage(bima, 0, 0, this);
                 bima = null;
-                espera(600);
+                espera(speed);
             }  
         }  
     }
@@ -93,6 +95,10 @@ public class PuzzleImage extends JPanel{
         bima = null;
         this.repaint();
         this.table = null;
+    }
+    
+    public void setSpeed(int t){
+        this.speed = t;
     }
     
     private void espera(long t) {

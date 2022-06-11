@@ -28,10 +28,6 @@ public class Control implements EventListener {
 
         Collections.reverse(puzzleSteps);
 
-        System.out.println("SOLUCIO TROBADA : ");
-        for (int i=0;i<puzzleSteps.size();i++){
-            System.out.println(printTable(puzzleSteps.get(i)));
-        }
         p6.notify(new ViewEvent(puzzleSteps));
 
     }
