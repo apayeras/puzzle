@@ -44,7 +44,7 @@ public class PuzzleImage extends JPanel{
                 loadImage(step);
                 gr.drawImage(bima, 0, 0, this);
                 bima = null;
-                espera(1000);
+                espera(600);
             }  
         }  
     }

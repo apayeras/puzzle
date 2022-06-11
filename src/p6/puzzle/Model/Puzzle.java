@@ -27,7 +27,6 @@ public class Puzzle implements Comparable<Puzzle> {
 
     public Puzzle(Puzzle puzzle, Movement move){
         this.dimension = puzzle.dimension;
-        //this.cells = puzzle.cells;
         this.emptyId = puzzle.emptyId;
         this.emptyX = puzzle.emptyX;
         this.emptyY = puzzle.emptyY;
@@ -45,10 +44,8 @@ public class Puzzle implements Comparable<Puzzle> {
         this.level = 0;
         this.prev = null;
         this.dimension = dimension;
-        //this.cells = new Cell[dimension*dimension];
         this.solved = initPuzzle();
         this.heuristic = heuristic;
-        //createCells(imageFile);
         shakePuzzle();
         calcCost();
     }
